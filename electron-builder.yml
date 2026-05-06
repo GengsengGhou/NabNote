@@ -1,0 +1,23 @@
+appId: com.gengsengghou.nabnote
+productName: NabNote
+directories:
+  output: dist
+files:
+  - "**/*"
+  - "!node_modules/.cache"
+  - "!dist"
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: assets/icon.ico
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+mac:
+  target: dmg
+  icon: assets/icon.png
+linux:
+  target: AppImage
+  icon: assets/icon.png

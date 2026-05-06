@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.cache/
+*.db
+*.db-journal
+.DS_Store
+Thumbs.db
+package-lock.json
