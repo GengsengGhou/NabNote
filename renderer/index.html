@@ -2,35 +2,53 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' file:// data:; font-src 'self';">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
   <title>NabNote</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="titlebar">
+<body class="theme-dark">
+
+  <div id="titlebar">
     <span class="titlebar-title">NabNote</span>
     <div class="titlebar-controls">
-      <button class="titlebar-btn btn-minimize" id="btn-minimize">&#x2014;</button>
-      <button class="titlebar-btn btn-close" id="btn-close">&#x2715;</button>
+      <button id="btn-theme" class="titlebar-btn" title="切换主题"></button>
+      <button id="btn-minimize" class="titlebar-btn" title="最小化">&#x2014;</button>
+      <button id="btn-close" class="titlebar-btn" title="关闭">&#x2715;</button>
     </div>
   </div>
 
-  <div class="input-area">
-    <input type="text" id="note-input" placeholder="有什么想记的？回车保存" autocomplete="off" />
+  <nav id="tab-nav">
+    <button class="tab active" id="tab-todo">待办</button>
+    <button class="tab" id="tab-ideas">想法</button>
+  </nav>
+
+  <div id="content-panels">
+    <div id="panel-todo" class="panel active">
+      <div id="input-area">
+        <input type="text" id="note-input" placeholder="添加待办事项...">
+      </div>
+      <div id="search-area">
+        <input type="text" id="todo-search" placeholder="搜索待办...">
+      </div>
+      <div id="notes-list"></div>
+    </div>
+
+    <div id="panel-ideas" class="panel">
+      <div id="ideas-breadcrumb"></div>
+      <div id="ideas-toolbar">
+        <button id="btn-new-card">新建卡片</button>
+        <button id="btn-new-folder">新建文件夹</button>
+        <input type="text" id="ideas-search" placeholder="搜索想法...">
+      </div>
+      <div id="ideas-content"></div>
+    </div>
   </div>
 
-  <div class="search-area">
-    <input type="text" id="search-input" placeholder="搜索笔记..." autocomplete="off" />
-  </div>
+  <div id="statusbar"></div>
 
-  <div class="notes-list" id="notes-list">
-  </div>
-
-  <div class="statusbar" id="statusbar">
-    共 0 条笔记 · 已完成 0 条
-  </div>
-
+  <script src="todo.js"></script>
+  <script src="ideas.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
