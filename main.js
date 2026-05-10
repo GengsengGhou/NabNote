@@ -7,6 +7,23 @@ let mainWindow = null
 let tray = null
 let isQuitting = false
 
+const gotSingleInstanceLock = app.requestSingleInstanceLock()
+
+if (!gotSingleInstanceLock) {
+  app.quit()
+}
+
+function showMainWindow() {
+  if (!mainWindow) return
+
+  if (mainWindow.isMinimized()) {
+    mainWindow.restore()
+  }
+
+  mainWindow.show()
+  mainWindow.focus()
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 400,
@@ -45,8 +62,7 @@ function createTray() {
     {
       label: '显示 NabNote',
       click: () => {
-        mainWindow.show()
-        mainWindow.focus()
+        showMainWindow()
       }
     },
     { type: 'separator' },
@@ -62,8 +78,7 @@ function createTray() {
   tray.setContextMenu(contextMenu)
 
   tray.on('double-click', () => {
-    mainWindow.show()
-    mainWindow.focus()
+    showMainWindow()
   })
 }
 
@@ -72,8 +87,7 @@ function registerShortcuts() {
     if (mainWindow.isVisible()) {
       mainWindow.hide()
     } else {
-      mainWindow.show()
-      mainWindow.focus()
+      showMainWindow()
     }
   })
 }
@@ -111,23 +125,29 @@ function setupIpc() {
   ipcMain.handle('window:close', () => mainWindow.close())
 }
 
-app.whenReady().then(async () => {
-  await db.init(app)
-  createWindow()
-  createTray()
-  registerShortcuts()
-  setupIpc()
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-    } else {
-      mainWindow.show()
-    }
+if (gotSingleInstanceLock) {
+  app.on('second-instance', () => {
+    showMainWindow()
   })
-}).catch(err => {
-  console.error('App startup error:', err)
-})
+
+  app.whenReady().then(async () => {
+    await db.init(app)
+    createWindow()
+    createTray()
+    registerShortcuts()
+    setupIpc()
+
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow()
+      } else {
+        showMainWindow()
+      }
+    })
+  }).catch(err => {
+    console.error('App startup error:', err)
+  })
+}
 
 app.on('window-all-closed', () => {
 })
